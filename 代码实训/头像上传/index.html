@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>案例-头像上传</title>
+    <link rel="stylesheet" href="./lib/bootstrap-v4.6.0.css">
+    <style>
+        .thumb-box {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .thumb {
+            width: 250px;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+
+<body>
+<div class="thumb-box">
+    <!-- 头像 -->
+    <img src="./images/cover.jpg" class="img-thumbnail thumb" alt="">
+    <div class="mt-2">
+        <!-- 文件选择框 -->
+        <!-- accept 属性表示可选择的文件类型 -->
+        <!-- image/* 表示只允许选择图片类型的文件 -->
+        <input type="file" id="iptFile" accept="image/*" style="display: none;">
+        <!-- 选择头像图片的按钮 -->
+        <button class="btn btn-primary" id="btnChoose">选择 & 上传图片</button>
+    </div>
+</div>
+
+<script src="./lib/common.js"></script>
+<script src="./lib/axios.js"></script>
+
+<script>
+    // 接口文档：https://www.showdoc.com.cn/1834761734600444/8449558512832212
+    axios.defaults.baseURL = 'http://ajax-api.itheima.net'
+    // 功能
+    //  1. 点击按钮，弹出文件选择框
+    //  2. 实现文件的上传功能
+
+    //  功能1. 点击按钮，弹出文件选择框
+    document.querySelector('#btnChoose').addEventListener('click', function () {
+        document.querySelector('#iptFile').click()
+    })
+
+    //  功能2：实现文件的上传功能
+    document.querySelector('#iptFile').addEventListener('change', async function () {
+        const file = this.files[0]
+        if (!file) return
+
+        const fd = new FormData()
+        fd.append('avatar', file)
+
+        const {data: {data: {url}}} = await axios.post('/api/file', fd)
+
+        document.querySelector('.img-thumbnail').src = url
+    })
+
+</script>
+</body>
+
+</html>

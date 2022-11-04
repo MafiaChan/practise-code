@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <title>Document</title>
+    <link rel="stylesheet" href="./assets/news.css"/>
+</head>
+
+<body>
+<div id="news-list">
+    <!--<div class="news-item">
+        <img class="thumb" src="http://www.liulongbin.top:3006/images/2.webp" alt="">
+        <div class="right-box">
+            <h1 class="title">华为5G随行WiFi发布，5G布局全面领先苹果、三星</h1>
+            <div class="tags">
+                <span>华为</span>
+                <span>苹果</span>
+                <span>5G网络</span>
+            </div>
+            <div class="footer">
+                <div>
+                    <span>驱动中国网络传媒</span>&nbsp;&nbsp;
+                    <span>2019-10-26 16:51:30</span>
+                </div>
+                <span>评论数：32</span>
+            </div>
+        </div>
+    </div>-->
+</div>
+
+<script src="./lib/jquery.js"></script>
+<script src="./lib/axios.js"></script>
+<script>
+    // 接口文档：https://www.showdoc.com.cn/1834761734600444/8449563515660414
+    //  在 公共接口中的 01-获取新闻列表
+    axios.defaults.baseURL = 'http://www.liulongbin.top:3006'
+
+    axios.get('/api/news').then(({data:{data}}) => {
+        console.log(data)
+        // 调用渲染函数
+        let htmlStr = render(data)
+        $('#news-list').html(htmlStr)
+    })
+
+    //渲染函数
+    function render(data) {
+        return data
+            .map((item) => {
+                const {id} = item
+                console.log(id)
+                return `
+            <div class="news-item">
+				<img class="thumb" src="http://www.liulongbin.top:3006${item.img}" alt="" />
+				<div class="right-box">
+					<h1 class="title">${item.title}</h1>
+					<div class="tags">
+						<span>${item.tags.split(',')[0] || ''}</span>
+						<span>${item.tags.split(',')[1] || ''}</span>
+						<span>${item.tags.split(',')[2] || ''}</span>
+					</div>
+					<div class="footer">
+						<div>
+							<span>${item.source}</span>&nbsp;&nbsp;
+							<span>${timeSplit(item.time)}</span>
+						</div>
+						<span>评论数：${item.cmtcount}</span>
+					</div>
+				</div>
+			</div>
+                `
+            })
+            .join('')
+    }
+
+    //处理时间格式函数
+    //时间格式修改函数
+    function timeSplit(time) {
+        let t = new Date(time)
+        // console.log(t)
+
+        let year = t.getFullYear() < 10 ? '0' + t.getFullYear() : t.getFullYear()
+        let month = t.getMonth() + 1 < 10 ? '0' + t.getMonth() + 1 : t.getMonth() + 1
+        let day = t.getDate() < 10 ? '0' + t.getDate() : t.getDate()
+        let h = t.getHours() < 10 ? '0' + t.getHours() : t.getHours()
+        let m = t.getMinutes() < 10 ? '0' + t.getMinutes() : t.getMinutes()
+        let s = t.getSeconds() < 10 ? '0' + t.getSeconds() : t.getSeconds()
+
+        // console.log(`${year}-${month}-${day} ${h}:${m}:${s}`)
+        return `${year}-${month}-${day} ${h}:${m}:${s}`
+    }
+</script>
+</body>
+
+</html>

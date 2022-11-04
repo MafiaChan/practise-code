@@ -1,0 +1,11 @@
+.list-box{
+  display: flex;
+  margin:100px;
+}
+.list-box .item{
+  margin-right: 10px;
+}
+.list-box .item select{
+  width: 120px;
+  height: 30px;
+}

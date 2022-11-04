@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <link rel="stylesheet" href="./assets/news.css" />
+    <script src="./lib/jquery.js"></script>
+</head>
+
+<body>
+    <div id="news-list">
+        <!-- <div class="news-item">
+            <img class="thumb" src="http://www.liulongbin.top:3006/images/2.webp" alt="">
+            <div class="right-box">
+                <h1 class="title">华为5G随行WiFi发布，5G布局全面领先苹果、三星</h1>
+                <div class="tags">
+                    <span>华为</span>
+                    <span>苹果</span>
+                    <span>5G网络</span>
+                </div>
+                <div class="footer">
+                    <div>
+                        <span>驱动中国网络传媒</span>&nbsp;&nbsp;
+                        <span>2019-10-26 16:51:30</span>
+                    </div>
+                    <span>评论数：32</span>
+                </div>
+            </div>
+        </div> -->
+    </div>
+
+    <script src="./lib/moment.js"></script>
+    <script>
+        // 发送ajax请求获取数据
+        $.ajax({
+            url: "http://www.liulongbin.top:3006/api/news",
+            success: function (info) {
+                if (info.status !== 200) return alert("获取新闻列表失败");
+
+                // 渲染数据到页面中
+                let htmlStr = rednerDOM(info.data);
+                $("#news-list").html(htmlStr);
+            }
+        })
+
+        // 渲染数据到页面中
+        function rednerDOM(data) {
+            return data.map(item => {
+                // 处理每个数据中的time时间为需要的格式
+                item.time = formatTime(item.time);
+
+                // 创建结构
+                return `
+                    <div class="news-item">
+                        <img class="thumb" src="http://www.liulongbin.top:3006${item.img}" alt="">
+                        <div class="right-box">
+                            <h1 class="title">${item.title}</h1>
+                            <div class="tags">
+                                ${renderTag(item.tags)}
+                            </div >
+                            <div class="footer">
+                                <div>
+                                    <span>${item.source}</span>&nbsp;&nbsp;
+                                    <span>${item.time}</span>
+                                </div>
+                                <span>评论数：${item.cmtcount}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join("");
+        }
+
+        // 补零函数
+        function paddZero(n) {
+            return n < 10 ? "0" + n : n;
+        }
+
+        // 处理时间
+        function formatTime(time) {
+            let d = new Date(time);
+
+            // 处理时间格式
+            let year = paddZero(d.getFullYear());
+            let month = paddZero(d.getMonth() + 1);
+            let day = paddZero(d.getDate());
+            let h = paddZero(d.getHours());
+            let m = paddZero(d.getMinutes());
+            let s = paddZero(d.getSeconds());
+
+            // 返回时间
+            return `${year}-${month}-${day} ${h}:${m}:${s}`;
+        }
+
+        // 处理tag
+        function renderTag(tags) {
+            return tags.split(",").map(tag => `<span>${tag}</span>`).join("");
+        }
+    </script>
+
+</body>
+
+</html>

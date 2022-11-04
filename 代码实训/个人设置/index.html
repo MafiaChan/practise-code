@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/bootstrap.min.css"/>
+    <style>
+        .form-select {
+            width: 103px;
+            display: inline-block;
+        }
+
+        .col-form-label {
+            text-align: right;
+        }
+
+        .figure-img {
+            width: 100px;
+            height: 100px;
+            cursor: pointer;
+        }
+
+        #upload {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <h1 class="p-5">个人设置</h1>
+    <form class="col-4">
+        <div class="row mb-3">
+            <label class="col-form-label col-3">昵称：</label>
+            <div class="col-9">
+                <input class="form-control col-9" type="text" name="nickname"/>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label class="col-form-label col-3">籍贯：</label>
+            <div class="col-9">
+                <select class="form-select col-4" name="province">
+                    <option value="">--省--</option>
+                </select>
+                <select class="form-select col-4" name="city">
+                    <option value="">--市--</option>
+                </select>
+                <select class="form-select col-4" name="area">
+                    <option value="">--区--</option>
+                </select>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label class="col-form-label col-3">头像：</label>
+            <div class="col-9">
+                <input class="form-control col-9" type="hidden" name="avatar"/>
+                <figure class="figure">
+                    <input type="file" id="upload"/>
+                    <img src="https://yanxuan-item.nosdn.127.net/12a882699bd531a1bd428bffe1989525.jpg"
+                         class="figure-img img-fluid rounded" alt="..."/>
+                    <figcaption class="figure-caption">修改头像</figcaption>
+                </figure>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label class="col-3"></label>
+            <div class="col-9">
+                <button class="btn btn-primary" id="save">保存</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="./lib/bootstrap.min.js"></script>
+<script src="./lib/axios.js"></script>
+<script>
+    // 上传头像
+    const upload = document.querySelector('#upload')
+    const avatar = document.querySelector('.figure img')
+
+    // 昵称
+    const nickname = document.querySelector('[name=nickname]')
+
+    // 省市区
+    const province = document.querySelector('[name=province]')
+    const city = document.querySelector('[name=city]')
+    const area = document.querySelector('[name=area]')
+
+
+    // 接口文档：https://www.showdoc.com.cn/1834761734600444/8477923164668939
+    axios.defaults.baseURL = 'http://ajax-api.itheima.net'
+
+    // 功能列表
+    // 功能1: 上传头像
+    avatar.addEventListener('click', function () {
+        upload.click()
+    })
+    upload.addEventListener('change', async function () {
+        const file = this.files[0]
+        if (!file) return
+        const fd = new FormData()
+        fd.append('avatar', file)
+        const {data: {data: {url}}} = await axios.post('/api/file', fd)
+        avatar.src = url
+        localStorage.setItem('avatar', url)
+    })
+
+    // 功能2: 页面初始化: 获取个人信息，并渲染到页面中
+    async function info() {
+        const {data: res} = await axios.get('/api/settings')
+        console.log(res)
+        nickname.value = res.data.nickname
+        avatar.src = res.data.avatar
+
+        const {data: provinceRes} = await axios.get('/api/province')
+        // console.log(provinceRes)
+        const provinceStr = provinceRes.data.map(item => `<option value="${item}">${item}</option>`).join('')
+        // console.log(provinceStr)
+        province.innerHTML = `<option value="">--省--</option>` + provinceStr
+
+        const {data: cityRes} = await axios.get('/api/city', {
+            params: {
+                pname: res.data.province
+            }
+        })
+        // console.log(cityRes)
+        const cityStr = cityRes.data.map(item => `<option value="${item}">${item}</option>`).join('')
+        // console.log(cityStr)
+        city.innerHTML = `<option value="">--省--</option>` + cityStr
+
+        const {data: areaRes} = await axios.get('/api/area', {
+            params: {
+                pname: res.data.province,
+                cname: res.data.city
+            }
+        })
+        const areaStr = areaRes.data.map(item => `<option value="${item}">${item}</option>`).join('')
+        area.innerHTML = `<option value="">--省--</option>` + areaStr
+
+        province.value = res.data.province
+        city.value = res.data.city
+        area.value = res.data.area
+    }
+
+    info()
+
+    // 功能3: 省市区的联动效果
+    province.addEventListener('change', async function () {
+        const {data: cityRes} = await axios.get('/api/city', {
+            params: {
+                pname: this.value
+            }
+        })
+        // console.log(cityRes)
+        const cityStr = cityRes.data.map(item => `<option value="${item}">${item}</option>`).join('')
+        // console.log(cityStr)
+        city.innerHTML = `<option value="">--省--</option>` + cityStr
+
+        area.value = ''
+    })
+
+    city.addEventListener('change', async function () {
+        const {data: areaRes} = await axios.get('/api/area', {
+            params: {
+                pname: province.value,
+                cname: this.value
+            }
+        })
+        const areaStr = areaRes.data.map(item => `<option value="${item}">${item}</option>`).join('')
+        area.innerHTML = `<option value="">--省--</option>` + areaStr
+    })
+
+
+    // 功能4: 保存个人信息，刷新页面，可以看到自己保存的个人信息
+    document.querySelector('#save').addEventListener('click', async function (e) {
+        e.preventDefault()
+        // console.log(1)
+        const res = await axios.put('/api/settings', {
+            nickname: nickname.value,
+            province: province.value,
+            city: city.value,
+            area: area.value,
+            avatar: localStorage.getItem('avatar')
+        })
+        console.log(res)
+    })
+
+    //        说明：由于接口提供的是相同账号下的个人信息，所以当大家都在练习的时候，会出现互相覆盖的情况
+
+    // function render(data) {
+    //     const htmlStr = data.map(item=>`<option value="">${item}</option>`)
+    // }
+
+    // 要求：
+    // 1. 使用 axios 发送请求
+    // 2. 设置 axios 请求根路径
+    // 3. 配合 async await 完成功能
+
+
+</script>
+</body>
+
+</html>
