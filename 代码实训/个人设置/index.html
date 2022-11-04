@@ -109,68 +109,72 @@
     })
 
     // 功能2: 页面初始化: 获取个人信息，并渲染到页面中
-    async function info() {
-        const {data: res} = await axios.get('/api/settings')
-        console.log(res)
-        nickname.value = res.data.nickname
-        avatar.src = res.data.avatar
-
+    //省数据的渲染
+    async function getProvinceData() {
         const {data: provinceRes} = await axios.get('/api/province')
         // console.log(provinceRes)
         const provinceStr = provinceRes.data.map(item => `<option value="${item}">${item}</option>`).join('')
         // console.log(provinceStr)
         province.innerHTML = `<option value="">--省--</option>` + provinceStr
+    }
 
+    //市数据的渲染
+    async function getCityData(pname) {
         const {data: cityRes} = await axios.get('/api/city', {
             params: {
-                pname: res.data.province
+                pname
             }
         })
         // console.log(cityRes)
         const cityStr = cityRes.data.map(item => `<option value="${item}">${item}</option>`).join('')
         // console.log(cityStr)
         city.innerHTML = `<option value="">--省--</option>` + cityStr
+    }
 
+    //区数据的渲染
+    async function getAreaData(pname, cname) {
         const {data: areaRes} = await axios.get('/api/area', {
             params: {
-                pname: res.data.province,
-                cname: res.data.city
+                pname,
+                cname
             }
         })
         const areaStr = areaRes.data.map(item => `<option value="${item}">${item}</option>`).join('')
         area.innerHTML = `<option value="">--省--</option>` + areaStr
+    }
 
-        province.value = res.data.province
-        city.value = res.data.city
-        area.value = res.data.area
+    async function info() {
+        const {data: {data: res}} = await axios.get('/api/settings')
+        console.log(res)
+        nickname.value = res.nickname
+        avatar.src = res.avatar
+
+        //todo
+        await getProvinceData()
+        //todo
+        await getCityData(res.province)
+        //todo
+        await getAreaData(res.province, res.city)
+
+        province.value = res.province
+        city.value = res.city
+        area.value = res.area
     }
 
     info()
 
     // 功能3: 省市区的联动效果
     province.addEventListener('change', async function () {
-        const {data: cityRes} = await axios.get('/api/city', {
-            params: {
-                pname: this.value
-            }
-        })
-        // console.log(cityRes)
-        const cityStr = cityRes.data.map(item => `<option value="${item}">${item}</option>`).join('')
-        // console.log(cityStr)
-        city.innerHTML = `<option value="">--省--</option>` + cityStr
+        //todo
+        await getCityData(this.value)
 
+        //解决选取bug
         area.value = ''
     })
 
     city.addEventListener('change', async function () {
-        const {data: areaRes} = await axios.get('/api/area', {
-            params: {
-                pname: province.value,
-                cname: this.value
-            }
-        })
-        const areaStr = areaRes.data.map(item => `<option value="${item}">${item}</option>`).join('')
-        area.innerHTML = `<option value="">--省--</option>` + areaStr
+        //todo
+        await getAreaData(province.value, this.value)
     })
 
 
@@ -190,9 +194,6 @@
 
     //        说明：由于接口提供的是相同账号下的个人信息，所以当大家都在练习的时候，会出现互相覆盖的情况
 
-    // function render(data) {
-    //     const htmlStr = data.map(item=>`<option value="">${item}</option>`)
-    // }
 
     // 要求：
     // 1. 使用 axios 发送请求
