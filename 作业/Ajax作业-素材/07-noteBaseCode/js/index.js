@@ -1,5 +1,3 @@
-import moment from 'moment'
-
 axios.defaults.baseURL = 'http://124.223.14.236:3001/api'
 // 渲染留言列表
 render()
@@ -67,23 +65,6 @@ async function render(order = 'id') {
     $('.comm-head sub').html(`(${list.length})`)
 
 
-}
-
-
-// 处理时间
-
-function getTime(time) {
-    const date = new Date(time)
-    const year = date.getFullYear()
-    const month = change(date.getMonth() + 1)
-    // console.log(month);
-    const day = change(date.getDate())
-    return `${year}-${month}-${day}`
-}
-
-// 字符拼接
-function change(x) {
-    return x >= 10 ? x : '0' + x
 }
 
 let order
