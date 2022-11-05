@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>注册页面</title>
+    <!--    引入格式文件-->
+    <link rel="stylesheet" href="./css/reg.css"/>
+    <script src="../lib/jquery.js"></script>
+    <script src="../lib/axios.js"></script>
+</head>
+<body>
+<style></style>
+<div class="rg_layout">
+    <div class="rg_left">
+        <p>新用户注册</p>
+        <p>USER REGISTER</p>
+    </div>
+    <div class="rg_center">
+        <div class="rg_form">
+            <form action="#" method="post" id="form1">
+                <table>
+                    <tr>
+                        <td class="td_left"><label for="username">用户名</label></td>
+                        <td class="td_right">
+                            <input type="text" name="username" id="username"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="td_left"><label for="password">密码</label></td>
+                        <td class="td_right">
+                            <input type="password" name="password" id="password"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="td_left"><label for="phone">手机号</label></td>
+                        <td class="td_right">
+                            <input type="text" name="phone" id="phone"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="td_left"><label for="">性别</label></td>
+                        <td class="td_right">
+                            <label><input type="radio" name="sex" value="1" checked/>男</label
+                            >&nbsp;&nbsp;&nbsp;
+                            <label><input type="radio" name="sex" value="0"/>女</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="td_left"><label for="">是否VIP</label></td>
+                        <td class="td_right">
+                            <label><input type="radio" name="vip" value="1"/>是</label>&nbsp;&nbsp;&nbsp;
+                            <label><input type="radio" name="vip" value="0" checked/>否</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="td_left"><label for="question">密保问题</label></td>
+                        <td class="td_right">
+                            <input type="text" name="question" id="question"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="td_left"><label for="answer">密保答案</label></td>
+                        <td class="td_right">
+                            <input type="text" name="answer" id="answer"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="td_left"><label for="avatar">头像</label></td>
+                        <td class="td_right">
+                            <input type="text" id="avatar" disabled/>
+                            <button>选择图片</button>
+                            <input type="file" hidden/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" align="center">
+                            <input type="submit" value="立即注册" id="btn_sub"/>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+    <div class="rg_right">
+        <p>已有账号？<a href="../01-loginBaseCode/login.html">立即登录</a></p>
+    </div>
+</div>
+<script>
+    //ajax部分
+    // $(function () {
+    // 	$('#form1').on('submit', function (e) {
+    // 		e.preventDefault()
+
+    // 		const data = $(this).serialize()
+    // 		// console.log(data)
+
+    // 		$.ajax({
+    // 			type: 'post',
+    // 			url: 'http://124.223.14.236:3001/api/user/reg',
+    // 			data: data,
+    // 			success({ success, msg }) {
+    // 				if (!success) {
+    // 					return alert(msg)
+    // 				} else {
+    // 					return alert(msg)
+    // 				}
+    // 			},
+    // 		})
+    // 	})
+    // })
+
+    //axios部分
+    document.querySelector('#form1').addEventListener('submit', async function (e) {
+        e.preventDefault()
+
+        const fd = new FormData(this)
+
+        const username = fd.get('username')
+        const password = fd.get('password')
+        const phone = fd.get('phone')
+        const sex = +fd.getAll('sex').join('')
+        const vip = +fd.getAll('vip').join('')
+        const question = fd.get('question')
+        const answer = fd.get('answer')
+
+        const data = {
+            username: username,
+            password: password,
+            phone: phone,
+            sex: sex,
+            vip: vip,
+            question: question,
+            answer: answer,
+        }
+
+        console.log(data)
+
+        const res = await axios({
+            method: 'post',
+            url: 'http://124.223.14.236:3001/api/user/reg',
+            data,
+        })
+        console.log(res)
+        // const {success, msg} = res.data
+        // // console.log(data)
+        // if (!success) {
+        //     return alert(msg)
+        // } else {
+        //     return alert(msg)
+        // }
+
+    })
+</script>
+</body>
+</html>

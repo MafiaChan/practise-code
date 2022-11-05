@@ -1,0 +1,7 @@
+Ajax课程案例练习接口
+
+链接: https://www.apifox.cn/apidoc/shared-36f0cbc0-9064-44bc-850a-805e263bf494/api-25593415
+
+访问密码 : nXLy9Tsf
+
+接口根路径（就是在每个接口前面需要加上的地址）：http://124.223.14.236:3001/api

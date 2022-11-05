@@ -1,0 +1,105 @@
+* {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+body {
+    padding-top: 25px;
+}
+
+.rg_layout {
+    width: 900px;
+    min-height: 500px;
+    border: 8px solid #eeeeee;
+    background-color: white;
+    margin: 100px auto 0;
+    overflow: hidden;
+}
+
+.rg_left {
+    float: left;
+    margin: 15px;
+}
+
+.rg_left > p:first-child {
+    color: #ffd026;
+    font-size: 20px;
+}
+
+.rg_left > p:last-child {
+    color: #a6a6a6;
+    font-size: 20px;
+}
+
+.rg_center {
+    float: left;
+    margin-top: 30px;
+}
+
+.rg_right {
+    float: right;
+    margin: 15px;
+    padding-left: 50px;
+}
+
+.rg_right p {
+    font-size: 15px;
+}
+
+.rg_right p a {
+    color: coral;
+}
+
+.td_left {
+    width: 100px;
+    text-align: right;
+    height: 45px;
+}
+
+.td_right {
+    padding-left: 50px;
+}
+
+#username,
+#password,
+#email,
+#name,
+#tel,
+#birthday,
+#question,
+#answer,
+#phone,
+#avatar {
+    width: 251px;
+    height: 32px;
+    border: 1px solid #a6a6a6;
+    /*设置边框圆角*/
+    border-radius: 5px;
+    padding-left: 10px;
+}
+
+#checkcode {
+    width: 110px;
+}
+
+#img_check {
+    height: 32px;
+    vertical-align: middle;
+}
+
+#btn_sub {
+    width: 100px;
+    height: 40px;
+    background-color: #efbf11;
+
+    border: 1px solid #ffd026;
+    padding-left: 10px;
+    color: #fff;
+    cursor: pointer;
+}
+
+#btn_sub:hover {
+    background-color: #ffd026;
+
+}

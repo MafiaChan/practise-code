@@ -1,0 +1,50 @@
+* {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    padding: 0;
+    text-decoration: none;
+}
+
+input[type='text'] {
+    height: 30px;
+    line-height: 30px;
+    padding-left: 5px;
+}
+
+.title {
+    width: 1200px;
+    display: flex;
+    justify-content: space-around;
+    margin: 100px auto;
+}
+
+.title i {
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
+    background-color: #777;
+    display: inline-block;
+    font-style: normal;
+    border-radius: 50%;
+    color: #fff;
+    margin-right: 5px;
+}
+
+.title span.active i {
+    background-color: orange;
+}
+
+.box {
+    text-align: center;
+}
+
+.box .input-item {
+    margin-bottom: 10px;
+}
+
+.box button {
+    font-size: 16px;
+    padding: 3px 10px;
+}

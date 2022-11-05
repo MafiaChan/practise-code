@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>找回密码</title>
+    <link rel="stylesheet" href="./css/index.css"/>
+    <script src="../lib/axios.js"></script>
+    <script src="../lib/jquery.js"></script>
+</head>
+
+<body>
+<!--说明： 分为三个大模块是按照步骤，最开始只显示找回账号DOM，点击下一步后切换到下一个容器，上一个不显示，依次类推 -->
+<div class="title">
+    <span class="active"><i>1</i>输入找回账号</span>
+    <span><i>2</i>回答密保问题</span>
+    <span><i>3</i>重置密码</span>
+</div>
+<div class="box">
+    <div class="input-item">
+        <label>请输入手机号：</label>
+        <label for="phone"></label><input type="text" name="phone" id="phone"/>
+    </div>
+    <button>下一步</button>
+</div>
+<!----------------------------------------------------->
+<!-- <br />
+<hr /> -->
+<div class="title">
+    <span><i>1</i>输入找回账号</span>
+    <span class="active"><i>2</i>回答密保问题</span>
+    <span><i>3</i>重置密码</span>
+</div>
+<div class="box">
+    <div class="input-item">
+        <label> 用户名：</label>
+        <label>
+            <input type="text" value="xxxx" disabled class="username"/>
+        </label>
+    </div>
+    <div class="input-item">
+        <label> 手机号：</label>
+        <label>
+            <input type="text" value="xxxx" disabled class="phone"/>
+        </label>
+    </div>
+    <div class="input-item">
+        <label>密保问题：</label>
+        <label>
+            <input type="text" value="xxxxxxx" disabled class="question"/>
+        </label>
+    </div>
+    <div class="input-item">
+        <label>密保答案：</label>
+        <label for="answer"></label><input type="text" name="answer" id="answer"/>
+    </div>
+    <button>上一步</button>
+    <button>下一步</button>
+</div>
+<!----------------------------------------------------->
+<!-- <br />
+<hr /> -->
+<div class="title">
+    <span><i>1</i>输入找回账号</span>
+    <span><i>2</i>回答密保问题</span>
+    <span class="active"><i>3</i>重置密码</span>
+</div>
+<div class="box">
+    <div class="input-item">
+        <label>请输入新密码：</label>
+        <label for="password"></label><input type="text" name="password" id="password"/>
+    </div>
+    <button>上一步</button>
+    <button>立即重置</button>
+</div>
+<script>
+    $(function () {
+        //！晚上脑抽写的，不要笑我，当时死脑筋了
+        $('.title').nextAll('.title').hide()
+        $('.box').nextAll('.box').hide()
+        // $('.box')
+        //     .children('button')[0]
+        //     .addEventListener('click', function () {
+        //         $(this).parent().hide()
+        //         $(this).parent().prev().hide()
+        //         $(this).parent().next().show()
+        //         $(this).parent().next().next().show()
+        //     })
+        $('.box')
+            .children('button')[1]
+            .addEventListener('click', function () {
+                $(this).parent().hide()
+                $(this).parent().prev().hide()
+                $(this).parent().prev().prev().show()
+                $(this).parent().prev().prev().prev().show()
+            })
+        $('.box')
+            .children('button')[2]
+            .addEventListener('click', function () {
+                $(this).parent().hide()
+                $(this).parent().prev().hide()
+                $(this).parent().next().show()
+                $(this).parent().next().next().show()
+            })
+        $('.box')
+            .children('button')[3]
+            .addEventListener('click', function () {
+                $(this).parent().hide()
+                $(this).parent().prev().hide()
+                $(this).parent().prev().prev().show()
+                $(this).parent().prev().prev().prev().show()
+            })
+
+        //ajax部分
+        let num = null
+        $('.box')
+            .children('button')[0]
+            .addEventListener('click', function () {
+                $(this).parent().hide()
+                $(this).parent().prev().hide()
+                $(this).parent().next().show()
+                $(this).parent().next().next().show()
+                const text = $('#phone').val()
+                $.ajax({
+                    method: 'GET',
+                    url: 'http://124.223.14.236:3001/api/user/findPwd',
+                    data: {
+                        phone: text
+                    },
+                    success(res) {
+                        console.log(res);
+                        if (!res.success) {
+                            return alert(res.msg)
+                        }
+
+                        const {data: {username, phone, question, id}} = res
+                        num = id
+                        $('.username').val(username)
+                        $('.phone').val(phone)
+                        $('.question').val(question)
+                    }
+                })
+            })
+        $('.box')
+            .children('button')[4]
+            .addEventListener('click', async function () {
+                // e.preventDefault()
+
+                const res = await axios.post('http://124.223.14.236:3001/api/user/resetPwd', {
+                    id: '' + num,
+                    password: $('#password').val(),
+                    answer: $('#answer').val()
+                })
+                console.log(res)
+            })
+    })
+</script>
+</body>
+</html>
