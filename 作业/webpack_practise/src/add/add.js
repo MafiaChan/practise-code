@@ -1,0 +1,1 @@
+export const addFn = (a, b) => console.log(a + b)
