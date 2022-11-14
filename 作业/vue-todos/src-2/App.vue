@@ -2,7 +2,7 @@
     <section class="todoapp">
         <todo-header :list="list" @addList="addListFn"></todo-header>
         <todo-main :list="showList" @delList="delListFn"></todo-main>
-        <todo-footer :list="list" @clearList="clearListFn" @changeType="changeTypeFn"></todo-footer>
+        <todo-footer :amount="amount" :list="list" @clearDone="clearDoneFn" @changeType="changeTypeFn"></todo-footer>
     </section>
 </template>
 
@@ -37,22 +37,17 @@ export default {
         delListFn(id) {
             this.list = this.list.filter(item => item.id !== id)
         },
-        clearListFn() {
+        clearDoneFn() {
             this.list = this.list.filter(item => !item.isDone)
         },
         changeTypeFn(type) {
             this.type = type
         }
     },
-    watch: {
-        list: {
-            deep: true,
-            handler() {
-                localStorage.setItem('todoList', JSON.stringify(this.list))
-            }
-        }
-    },
     computed: {
+        amount() {
+            return this.list.length
+        },
         showList() {
             if (this.type === 'undo') {
                 return this.list.filter(item => !item.isDone)
@@ -61,6 +56,14 @@ export default {
             } else {
                 return this.list
             }
+        }
+    },
+    watch: {
+        list: {
+            handler() {
+                localStorage.setItem('todoList', JSON.stringify(this.list))
+            },
+            deep: true
         }
     }
 };

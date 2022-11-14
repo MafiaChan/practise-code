@@ -26,6 +26,17 @@ export default {
         todoMain,
         todoFooter
     },
+    computed: {
+        showList() {
+            if (this.type === 'undo') {
+                return this.list.filter(item => !item.isDone)
+            } else if (this.type === 'done') {
+                return this.list.filter(item => item.isDone)
+            } else {
+                return this.list
+            }
+        }
+    },
     methods: {
         addListFn(val) {
             this.list.push({
@@ -46,22 +57,11 @@ export default {
     },
     watch: {
         list: {
-            deep: true,
             handler() {
                 localStorage.setItem('todoList', JSON.stringify(this.list))
-            }
-        }
-    },
-    computed: {
-        showList() {
-            if (this.type === 'undo') {
-                return this.list.filter(item => !item.isDone)
-            } else if (this.type === 'done') {
-                return this.list.filter(item => item.isDone)
-            } else {
-                return this.list
-            }
-        }
+            },
+            deep: true
+        },
     }
 };
 </script>
