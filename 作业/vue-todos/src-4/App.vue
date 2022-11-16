@@ -2,7 +2,7 @@
     <section class="todoapp">
         <todo-header :list="list" @addList="addListFn"></todo-header>
         <todo-main :list="showList" @delList="delListFn"></todo-main>
-        <todo-footer :list="list" @clearDone="clearDoneFn" @changeType="changeTypeFn"></todo-footer>
+        <todo-footer :list="list" @clearList="clearListFn" @changeType="changeTypeFn"></todo-footer>
     </section>
 </template>
 
@@ -10,10 +10,10 @@
 import todoHeader from "@/components/TodoHeader"
 import todoMain from "@/components/TodoMain"
 import todoFooter from "@/components/TodoFooter"
-
+// 样式引入 + 导入组件并注册使用
 import './styles/base.css'
 import './styles/index.css'
-// 样式引入 + 导入组件并注册使用
+
 export default {
     data() {
         return {
@@ -26,17 +26,6 @@ export default {
         todoMain,
         todoFooter
     },
-    computed: {
-        showList() {
-            if (this.type === 'undo') {
-                return this.list.filter(item => !item.isDone)
-            } else if (this.type === 'done') {
-                return this.list.filter(item => item.isDone)
-            } else {
-                return this.list
-            }
-        }
-    },
     methods: {
         addListFn(val) {
             this.list.push({
@@ -48,7 +37,7 @@ export default {
         delListFn(id) {
             this.list = this.list.filter(item => item.id !== id)
         },
-        clearDoneFn() {
+        clearListFn() {
             this.list = this.list.filter(item => !item.isDone)
         },
         changeTypeFn(type) {
@@ -60,6 +49,17 @@ export default {
             deep: true,
             handler() {
                 localStorage.setItem('todoList', JSON.stringify(this.list))
+            }
+        }
+    },
+    computed: {
+        showList() {
+            if (this.type === 'undo') {
+                return this.list.filter(item => !item.isDone)
+            } else if (this.type === 'done') {
+                return this.list.filter(item => item.isDone)
+            } else {
+                return this.list
             }
         }
     }
