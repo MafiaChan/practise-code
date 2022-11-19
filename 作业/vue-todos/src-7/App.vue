@@ -2,7 +2,7 @@
     <section class="todoapp">
         <todo-header :list="list" @addList="addListFn"></todo-header>
         <todo-main :list="showList" @delList="delListFn"></todo-main>
-        <todo-footer :list="list" @delDone="delDoneFn" @changeType="changeTypeFn"></todo-footer>
+        <todo-footer :list="list" @clearDone="clearDoneFn" @changeType="changeTypeFn"></todo-footer>
     </section>
 </template>
 
@@ -10,6 +10,7 @@
 import todoHeader from "@/components/TodoHeader"
 import todoMain from "@/components/TodoMain"
 import todoFooter from "@/components/TodoFooter"
+
 import './styles/base.css'
 import './styles/index.css'
 // 样式引入 + 导入组件并注册使用
@@ -17,8 +18,13 @@ export default {
     data() {
         return {
             type: 'all',
-            list: JSON.parse('todoList') || []
+            list: JSON.parse(localStorage.getItem('todoList')) || []
         };
+    },
+    components: {
+        todoHeader,
+        todoMain,
+        todoFooter
     },
     computed: {
         showList() {
@@ -28,19 +34,6 @@ export default {
                 return this.list.filter(item => item.isDone)
             } else {
                 return this.list
-            }
-        }
-    },
-    components: {
-        todoHeader,
-        todoMain,
-        todoFooter
-    },
-    watch: {
-        list: {
-            deep: true,
-            handler() {
-                localStorage.setItem('todoList', JSON.stringify(this.list))
             }
         }
     },
@@ -55,12 +48,20 @@ export default {
         delListFn(id) {
             this.list = this.list.filter(item => item.id !== id)
         },
-        delDoneFn() {
+        clearDoneFn() {
             this.list = this.list.filter(item => !item.isDone)
         },
         changeTypeFn(type) {
             this.type = type
         }
     },
+    watch: {
+        list: {
+            deep: true,
+            handler() {
+                localStorage.setItem('todoList', JSON.stringify(this.list))
+            }
+        }
+    }
 };
 </script>

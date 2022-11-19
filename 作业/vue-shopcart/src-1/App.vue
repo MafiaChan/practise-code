@@ -7,8 +7,8 @@
 </template>
 
 <script>
-// 获取-购物车列表接口  GET  https://applet-base-api-t.itheima.net/api/cart
 import axios from "axios"
+// 获取-购物车列表接口  GET  https://applet-base-api-t.itheima.net/api/cart
 import MyHeader from "@/components/MyHeader"
 import MyGoods from "@/components/MyGoods"
 import MyFooter from "@/components/MyFooter"
@@ -26,14 +26,14 @@ export default {
             this.list = res.list
         }
     },
-    created() {
-        this.getList()
-    },
     components: {
         MyHeader,
         MyGoods,
         MyFooter
     },
+    created() {
+        this.getList()
+    }
 }
 </script>
 

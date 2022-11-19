@@ -2,7 +2,7 @@
     <section class="todoapp">
         <todo-header :list="list" @addList="addListFn"></todo-header>
         <todo-main :list="showList" @delList="delListFn"></todo-main>
-        <todo-footer :list="list" @delDone="delDoneFn" @changeType="changeTypeFn"></todo-footer>
+        <todo-footer :list="list" @clearList="clearListFn" @changeType="changeTypeFn"></todo-footer>
     </section>
 </template>
 
@@ -10,39 +10,21 @@
 import todoHeader from "@/components/TodoHeader"
 import todoMain from "@/components/TodoMain"
 import todoFooter from "@/components/TodoFooter"
+// 样式引入 + 导入组件并注册使用
 import './styles/base.css'
 import './styles/index.css'
-// 样式引入 + 导入组件并注册使用
+
 export default {
     data() {
         return {
             type: 'all',
-            list: JSON.parse('todoList') || []
+            list: JSON.parse(localStorage.getItem('todoList')) || []
         };
-    },
-    computed: {
-        showList() {
-            if (this.type === 'undo') {
-                return this.list.filter(item => !item.isDone)
-            } else if (this.type === 'done') {
-                return this.list.filter(item => item.isDone)
-            } else {
-                return this.list
-            }
-        }
     },
     components: {
         todoHeader,
         todoMain,
         todoFooter
-    },
-    watch: {
-        list: {
-            deep: true,
-            handler() {
-                localStorage.setItem('todoList', JSON.stringify(this.list))
-            }
-        }
     },
     methods: {
         addListFn(val) {
@@ -55,12 +37,31 @@ export default {
         delListFn(id) {
             this.list = this.list.filter(item => item.id !== id)
         },
-        delDoneFn() {
+        clearListFn() {
             this.list = this.list.filter(item => !item.isDone)
         },
         changeTypeFn(type) {
             this.type = type
         }
     },
+    watch: {
+        list: {
+            deep: true,
+            handler() {
+                localStorage.setItem('todoList', JSON.stringify(this.list))
+            }
+        }
+    },
+    computed: {
+        showList() {
+            if (this.type === 'undo') {
+                return this.list.filter(item => !item.isDone)
+            } else if (this.type === 'done') {
+                return this.list.filter(item => item.isDone)
+            } else {
+                return this.list
+            }
+        }
+    }
 };
 </script>

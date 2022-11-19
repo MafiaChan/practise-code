@@ -14,12 +14,7 @@
 
 <script>
 export default {
-    props: {
-        list: {
-            type: Array,
-            require: true,
-        }
-    },
+    props: ['list'],
     methods: {
         delList(id) {
             this.$emit('delList', id)
