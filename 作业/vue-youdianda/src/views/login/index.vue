@@ -10,7 +10,7 @@
     <van-form @submit="onSubmit">
       <van-field
         left-icon="manager"
-        v-model="username"
+        v-model.number="username"
         name="用户名"
         label="用户名"
         placeholder="请输入手机号"
@@ -70,16 +70,21 @@ export default {
       this.$router.go(-1)
     },
     async onSubmit () {
-      const { data: res } = await userLogin(this.username, this.password)
-      console.log(res)
-      if (res.errno === 0) {
-        this.$toast.success('登录成功')
-        this.setUserToken(res.data.token)
-        await this.$router.push('/')
-      } else {
-        this.$toast.fail(res.errmsg)
+      try {
+        const { data: res } = await userLogin(this.username, this.password)
+        console.log(res)
+        if (res.errno === 0) {
+          this.$toast.success('登录成功')
+          this.setUserToken(res.data.token)
+          await this.$router.push('/')
+        } else {
+          this.$toast.fail(res.errmsg)
+        }
+      } catch (err) {
+        this.$toast.fail('网络错误')
       }
     }
+
   }
 }
 </script>
@@ -93,7 +98,7 @@ export default {
   overflow: hidden;
 
   .van-nav-bar {
-    background: #3196fa;
+    background: #4187f2;
 
     /deep/ .van-nav-bar__title {
       color: white;

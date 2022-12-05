@@ -4,7 +4,7 @@ import router from './router'
 import store from './store'
 import '@/utils/vant'
 import 'amfe-flexible'
-
+import '@/assets/font/font-awesome.css'
 // 引入全局样式base
 import '@/styles/base.less'
 

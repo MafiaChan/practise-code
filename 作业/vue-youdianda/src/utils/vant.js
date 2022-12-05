@@ -23,7 +23,7 @@ import {
   PullRefresh,
   Lazyload,
   Popup,
-  ActionSheet, Swipe, SwipeItem
+  ActionSheet, Swipe, SwipeItem, NoticeBar, Loading, Empty, Uploader, Picker, DatetimePicker
 } from 'vant'
 
 Vue.use(Button)
@@ -52,3 +52,9 @@ Vue.use(Popup)
 Vue.use(ActionSheet)
 Vue.use(Swipe)
 Vue.use(SwipeItem)
+Vue.use(NoticeBar)
+Vue.use(Loading)
+Vue.use(Empty)
+Vue.use(Uploader)
+Vue.use(Picker)
+Vue.use(DatetimePicker)

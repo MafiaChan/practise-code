@@ -13,3 +13,9 @@ export const userRegister = (mobile, password) =>
     mobile,
     password
   })
+
+// 获取用户信息
+export const getUserInfo = () => axios.get('/user/getUserInfo')
+
+// 修改用户信息
+export const updateUserInfo = (userInfo) => axios.post('/user/update', userInfo)

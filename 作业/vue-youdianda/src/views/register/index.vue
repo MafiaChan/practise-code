@@ -81,15 +81,18 @@ export default {
       return val === this.password
     },
     async onSubmit () {
-      // console.log('submit')
-      const { data: res } = await userRegister(this.username, this.password)
-      console.log(res)
-      if (res.errno === 0) {
-        this.$toast.success('注册成功')
-        this.setUserToken(res.data.token)
-        await this.$router.push('/login')
-      } else {
-        this.$toast.fail(res.errmsg)
+      try {
+        const { data: res } = await userRegister(this.username, this.password)
+        console.log(res)
+        if (res.errno === 0) {
+          this.$toast.success('注册成功')
+          this.setUserToken(res.data.token)
+          await this.$router.push('/login')
+        } else {
+          this.$toast.fail(res.errmsg)
+        }
+      } catch (err) {
+        this.$toast.fail('网络错误')
       }
     }
   }
@@ -105,7 +108,7 @@ export default {
   overflow: hidden;
 
   .van-nav-bar {
-    background: #3196fa;
+    background: #4187f2;
 
     /deep/ .van-nav-bar__title {
       color: white;
