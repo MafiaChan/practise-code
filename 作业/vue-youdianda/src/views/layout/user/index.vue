@@ -31,15 +31,15 @@
     </div>
     <div class="user-owner" v-if="token">
       <van-grid :column-num="3">
-        <van-grid-item icon="like-o" text="收藏"/>
-        <van-grid-item icon="thumb-circle-o" text="点赞"/>
-        <van-grid-item icon="newspaper-o" text="文章"/>
+        <van-grid-item icon="like-o" text="收藏" to="/article"/>
+        <van-grid-item icon="thumb-circle-o" text="点赞" to="/article/collect"/>
+        <van-grid-item icon="newspaper-o" text="文章" to="/article/likes"/>
       </van-grid>
     </div>
     <div class="user-other">
-      <van-cell title="我的文章" icon="newspaper-o" is-link/>
-      <van-cell title="我的收藏" icon="thumb-circle-o" is-link/>
-      <van-cell title="我的点赞" icon="like-o" is-link/>
+      <van-cell title="我的文章" icon="newspaper-o" is-link to="/article"/>
+      <van-cell title="我的收藏" icon="thumb-circle-o" is-link to="/article/collect"/>
+      <van-cell title="我的点赞" icon="like-o" is-link to="/article/likes"/>
     </div>
     <div class="btn">
       <van-button type="info" size="large" v-if="token" @click="remove">立即退出</van-button>

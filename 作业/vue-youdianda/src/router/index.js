@@ -4,6 +4,10 @@ import VueRouter from 'vue-router'
 import Layout from '@/views/layout'
 import Login from '@/views/login'
 import NotFound from '@/views/404'
+import Article from '@/views/articles/index.vue'
+import Collect from '@/views/articles/collect.vue'
+import Likes from '@/views/articles/likes.vue'
+import UserArticle from '@/views/articles/article.vue'
 // 导入二级路由
 import Home from '@/views/layout/home'
 import Edit from '@/views/layout/edit'
@@ -27,13 +31,7 @@ const routes = [
       },
       {
         path: 'apps',
-        component: Apps,
-        children: [
-          {
-            path: 'applist',
-            component: Applist
-          }
-        ]
+        component: Apps
       },
       {
         path: 'edit',
@@ -50,12 +48,32 @@ const routes = [
     ]
   },
   {
+    path: '/apps/applist',
+    component: Applist
+  },
+  {
     path: '/login',
     component: Login
   },
   {
     path: '/register',
     component: () => import('@/views/register')
+  },
+  {
+    path: '/article/:id',
+    component: UserArticle
+  },
+  {
+    path: '/articles',
+    component: Article
+  },
+  {
+    path: '/articles/collect',
+    component: Collect
+  },
+  {
+    path: '/articles/likes',
+    component: Likes
   },
   {
     path: '*',

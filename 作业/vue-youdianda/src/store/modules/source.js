@@ -25,7 +25,7 @@ export default {
   actions: {
     async actions_setBanner (context) {
       const { data: index } = await getIndexData()
-      console.log(index)
+      // console.log(index)
       context.commit('setBanner', index.data.banner)
     },
     async actions_setHot (context) {

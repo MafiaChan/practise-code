@@ -26,7 +26,11 @@
         </template>
       </van-cell>
       <van-grid :column-num="3" class="hot-grid">
-        <van-grid-item v-for="item in hot" :key="item.id">
+        <van-grid-item
+          v-for="item in hot"
+          :key="item.id"
+          @click="$router.push('/article/' + item.id)"
+        >
           <div class="flex-column">
             <div class="hot-img">
               <van-image
@@ -58,7 +62,11 @@
         finished-text="没有更多了"
         @load="onLoad"
       >
-        <van-cell v-for="item in recentList" :key="item.id">
+        <van-cell
+          v-for="item in recentList"
+          :key="item.id"
+          @click="$router.push('/article/' + item.id)"
+        >
           <!-- 使用 title 插槽来自定义标题 -->
           <template #title>
             <div class="recent-list-title">{{ item.title }}

@@ -7,7 +7,7 @@
       fixed
     />
     <div class="edit-pannel">
-      <van-cell title="头像" is-link>
+      <van-cell title="头像" is-link @click="$refs.avatar.chooseFile()">
         <van-image
           round
           width="0.8rem"
@@ -15,6 +15,7 @@
           :src="url+userInfo.icon"
         ></van-image>
       </van-cell>
+      <van-uploader ref="avatar" v-show="false" :after-read="afterRead"/>
       <van-cell title="昵称" is-link @click="nameShowFn">
         {{ userInfo.username }}
       </van-cell>
@@ -152,13 +153,32 @@
         </div>
       </van-popup>
     </div>
+    <div class='mask' v-if='isShowMask'>
+      <VueCropper
+        :img='img'
+        autoCrop
+        autoCropWidth='120'
+        autoCropHeight='120'
+        centerBox
+        fixed
+        ref='cropper'
+      ></VueCropper>
+      <van-button type='primary' class='confirm' @click='crop'>
+        确定
+      </van-button>
+      <van-button type='primary' class='cancel' @click='isShowMask = false'
+      >取消
+      </van-button
+      >
+    </div>
   </div>
 </template>
 
 <script>
 import { mapActions, mapState } from 'vuex'
-import { updateUserInfo } from '@/api/user'
+import { updateUserInfo, uploadImage } from '@/api/user'
 import moment from 'moment'
+import { VueCropper } from 'vue-cropper'
 
 export default {
   name: 'EditUser',
@@ -199,7 +219,9 @@ export default {
       homeShow: false,
       newHome: '',
       noteShow: false,
-      newNote: ''
+      newNote: '',
+      isShowMask: false,
+      img: ''
     }
   },
   computed: {
@@ -316,7 +338,36 @@ export default {
     birthShowFn () {
       this.birthShow = true
       this.currentDate = new Date(this.userInfo.birthday)
+    },
+    afterRead (file) {
+      console.log(file)
+      // 显示裁剪区域
+      this.isShowMask = true
+      // 设置需要裁切的图片
+      this.img = file.content
+    },
+    async crop () {
+      // 获取blob数据
+      this.$refs.cropper.getCropBlob(async data => {
+        // console.log(data)
+        const fd = new FormData()
+        fd.append('file', data)
+        const { data: { data: res } } = await uploadImage(fd)
+        // console.log(res)
+        await updateUserInfo({
+          id: this.userInfo.id,
+          icon: res.savePath
+        })
+        this.$toast('头像更换成功')
+        // 关闭剪切窗口
+        this.isShowMask = false
+        // 刷新信息
+        await this.actions_setUserInfo()
+      })
     }
+  },
+  components: {
+    VueCropper
   },
   created () {
     this.actions_setUserInfo()
@@ -356,6 +407,37 @@ export default {
     .input-filed {
       padding: 5px 5px;
     }
+  }
+}
+
+// 使用vue-cropper插件，必须指定父盒子的宽度和高度
+.demo {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: 9;
+}
+
+.mask {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 999;
+
+  .confirm,
+  .cancel {
+    position: absolute;
+    bottom: 0;
+  }
+
+  .confirm {
+    left: 0;
+  }
+
+  .cancel {
+    right: 0;
   }
 }
 </style>

@@ -2,7 +2,11 @@
   <div class="apps">
     <van-nav-bar title="分类" fixed/>
     <van-grid :border="false" :column-num="2" gutter="30px">
-      <van-grid-item v-for="item in cate" :key="item.id">
+      <van-grid-item
+        v-for="item in cate"
+        :key="item.id"
+        to="/apps/applist"
+      >
         <i :class="'fa '+item.icon"></i>
         <p>{{ item.catename }}</p>
       </van-grid-item>

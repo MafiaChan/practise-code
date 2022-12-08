@@ -15,3 +15,19 @@ export const getHotTopData = (page) => axios.get('/index/new', {
     limit: 20
   }
 })
+
+// 获取文章列表数据
+export const getArticleList = (id, page) => axios.get('/index/list', {
+  params: {
+    cateid: id,
+    page,
+    limit: 20
+  }
+})
+
+// 获取文章详情数据
+export const getArticleDetail = (id) => axios.get('/index/show', {
+  params: {
+    id
+  }
+})
