@@ -23,8 +23,7 @@
           <span class="pub-time">{{ Date.now(artInfo.create_date) | fromNow }}</span>
         </div>
       </div>
-      <div class='content'>
-        <div>{{ artInfo.content }}</div>
+      <div class='content' v-html="artInfo.content">
       </div>
 
       <!--分割线-->
@@ -107,8 +106,35 @@ export default {
     color: #3a3a3a;
   }
 
-  .content {
-    padding: 25px 15px;
+  /deep/ .content {
+    padding: 0.7rem 0.4rem;
+    -webkit-text-size-adjust: 100%;
+    font-family: '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
+
+    & > p {
+      text-align: justify;
+      margin-top: 20px;
+      margin-bottom: 20px;
+      padding: 0;
+      text-indent: 2em;
+      line-height: 1.8;
+      overflow: hidden;
+
+      & > * {
+        display: inline-block;
+        max-width: 100%;
+      }
+
+      & > span:has(img) {
+        width: 100%;
+        text-align: center;
+      }
+
+      img {
+        max-width: 100%;
+        margin: 0 auto;
+      }
+    }
   }
 }
 </style>

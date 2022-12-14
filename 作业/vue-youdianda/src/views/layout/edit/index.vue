@@ -25,7 +25,7 @@
           />
         </van-popup>
         <van-field
-          v-model="tagsName"
+          v-model="tags"
           label="文章标签"
           placeholder="请选择文章标签"
           :rules="rules.content"
@@ -41,7 +41,12 @@
         </van-popup>
         <van-field label="文件上传">
           <template #input>
-            <van-uploader v-model="fileList" multiple/>
+            <van-uploader
+              ref="file"
+              v-model="fileList"
+              :after-read="afterRead"
+              multiple
+            />
           </template>
         </van-field>
         <van-field
@@ -54,10 +59,10 @@
           :rules="rules.content"
         />
         <div class="edit-btns" style="display: flex;justify-content: space-around">
-          <van-button icon="plus" type="primary">
+          <van-button icon="plus" type="primary" @click="submitArt">
             发布
           </van-button>
-          <van-button icon="send-gift-o" type="info">
+          <van-button icon="send-gift-o" type="info" @click="saveArt">
             存草稿
           </van-button>
           <van-button icon="revoke" type="danger" @click="resetForm">
@@ -75,6 +80,7 @@
 <script>
 import { mapState } from 'vuex'
 import { getIndexData } from '@/api/source'
+import { publishArticle, uploadImage } from '@/api/user'
 
 export default {
   name: 'Edit',
@@ -84,7 +90,6 @@ export default {
       content: '',
       cateidName: '',
       cateid: '',
-      tagsName: '',
       tags: '',
       rules: {
         title: [
@@ -108,7 +113,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('user', ['token'])
+    ...mapState('user', ['token', 'userInfo'])
   },
   methods: {
     cateConfirm (value) {
@@ -117,17 +122,58 @@ export default {
       this.catePicker = false
     },
     tagsConfirm (value) {
-      this.tagsName = value.text
-      this.tags = value.value
+      this.tags = value.text
       this.tagsPicker = false
     },
     resetForm () {
       this.title = ''
       this.content = ''
+      this.cateidName = ''
       this.cateid = ''
       this.tags = ''
       this.fileList = []
       this.$refs.editForm.resetValidation()
+    },
+    afterRead (file) {
+      console.log(file)
+    },
+    async submitArt () {
+      const formData = new FormData()
+      formData.append('file', this.fileList[0])
+      const res = await uploadImage(formData)
+      console.log(res)
+      const { data } = await publishArticle({
+        title: this.title,
+        content: this.content,
+        cateid: this.cateid,
+        tags: this.tags,
+        author: this.userInfo.username,
+        pic: '',
+        status: '2'
+      })
+      if (data.errno === 0) {
+        this.$toast.success('发布成功')
+        this.resetForm()
+      } else {
+        this.$toast.fail('发布失败')
+      }
+    },
+    async saveArt () {
+      const { data } = await publishArticle({
+        title: this.title,
+        content: this.content,
+        cateid: this.cateid,
+        tags: this.tags,
+        author: this.userInfo.username,
+        pic: '',
+        status: '1'
+      })
+      if (data.errno === 0) {
+        this.$toast.success('存草稿成功')
+        this.resetForm()
+      } else {
+        this.$toast.fail('存草稿失败')
+      }
     }
   },
   async created () {

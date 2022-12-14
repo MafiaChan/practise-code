@@ -37,9 +37,9 @@
       </van-grid>
     </div>
     <div class="user-other">
-      <van-cell title="我的文章" icon="newspaper-o" is-link to="/article"/>
-      <van-cell title="我的收藏" icon="thumb-circle-o" is-link to="/article/collect"/>
-      <van-cell title="我的点赞" icon="like-o" is-link to="/article/likes"/>
+      <van-cell title="我的文章" icon="newspaper-o" is-link to="/articles"/>
+      <van-cell title="我的收藏" icon="thumb-circle-o" is-link to="/articles/collect"/>
+      <van-cell title="我的点赞" icon="like-o" is-link to="/articles/likes"/>
     </div>
     <div class="btn">
       <van-button type="info" size="large" v-if="token" @click="remove">立即退出</van-button>
